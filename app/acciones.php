@@ -2,7 +2,7 @@
 
 function accionDetalles($id){
     $usuario = $_SESSION['tuser'][$id];
-    $nombre  = $usuario[0];
+    $nombre  = $usuario[0]; 
     $login   = $usuario[1];
     $clave   = $usuario[2];
     $comentario=$usuario[3];
@@ -47,14 +47,13 @@ function accionTerminar() {
     volcarDatos($_SESSION['tuser']);
     //session_destroy();
     $_SESSION = [];
-   // var_dump($_SESSION['tuser']);
 }
 
 function accionPostAlta(){ 
     $registrado = false;
     $msg = "";
     $nuevo = [ $_POST['nombre'],$_POST['login'],$_POST['clave'],$_POST['comentario']];
-    limpiarArrayEntrada($_POST); //Evito la posible inyección de código
+    limpiarArrayEntrada($_POST); 
 
     foreach ($_SESSION['tuser'] as $usuario) {
         if ($_POST['login'] == $usuario[1]) {

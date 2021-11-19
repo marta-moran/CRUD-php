@@ -28,7 +28,6 @@ function cargarDatostxt(){
     
     while ($linea = fgets($fich)) {
         $partes = explode('|', trim($linea));
-        // Escribimos la correspondiente fila en tabla
         $tabla[]= [$partes[0],$partes[1],$partes[2],$partes[3]];
         }
     fclose($fich);
@@ -84,7 +83,6 @@ function volcarDatoscsv($tvalores){
 // ----------------------------------------------------
 // FICHERO DE JSON
 function cargarDatosjson (){
-    /*
     if (!is_readable(FILEUSER) ){
         // El directorio donde se crea tiene que tener permisos adecuados
         $fich = @fopen(FILEUSER,"w") or die ("Error al crear el fichero.");
@@ -92,31 +90,25 @@ function cargarDatosjson (){
     }
     $fich = @fopen(FILEUSER, 'r') or die("ERROR al abrir fichero de usuarios"); // abrimos el fichero para lectura
     
-    $fich = fopen(FILEUSER, 'r');
-    $fich = json_decode(FILEUSER, true);
+    $data = file_get_contents(FILEUSER);
+    $fich = json_decode($data, true);
 
-    
-    file_get_contents($fich);
-
-    var_dump($fich); */
-    
+   return $fich;
   
 }
 
 function volcarDatosjson($tvalores){
-    /*$tvalores = $_SESSION['tuser'];
-    $datosjon = json_encode($tvalores);
-    file_put_contents(FILEUSER, $datosjon) or die ("Error al escribir en el fichero."); 
-*/
+    $tvalores = json_encode($tvalores);
+    file_put_contents(FILEUSER, $tvalores) or die ("Error al escribir en el fichero."); 
 }
 
 
 // MOSTRA LOS DATOS DE LA TABLA DE ALMACENADA EN AL SESSION 
+// se recorre como un array de objetos
 function mostrarDatos (){
     
     $titulos = [ "Nombre","login","Password","Comentario"];
     $msg = "<table>\n";
-     // Identificador de la tabla
     $msg .= "<tr>";
     for ($j=0; $j < CAMPOSVISIBLES; $j++){
         $msg .= "<th>$titulos[$j]</th>";
@@ -129,9 +121,9 @@ function mostrarDatos (){
         $msg .= "<tr>";
         $datosusuario = $_SESSION['tuser'][$id];
         for ($j=0; $j < CAMPOSVISIBLES; $j++){
-            $msg .= "<td>$datosusuario[$j]</td>";
+            $msg .= "<td>$datosusuario[$j]</td>"; 
         }
-        $msg .="<td><a href=\"#\" onclick=\"confirmarBorrar('$datosusuario[0]',$id);\" >Borrar</a></td>\n";
+        $msg .="<td><a href=\"#\" onclick=\"confirmarBorrar('$datosusuario[0]',$id);\" >Borrar</a></td>\n"; 
         $msg .="<td><a href=\"".$auto."?orden=Modificar&id=$id\">Modificar</a></td>\n";
         $msg .="<td><a href=\"".$auto."?orden=Detalles&id=$id\" >Detalles</a></td>\n";  
         $msg .="</tr>\n";
@@ -142,14 +134,13 @@ function mostrarDatos (){
     return $msg;    
 }
 
-/*
- *  Funciones para limpiar la entreda de posibles inyecciones
- */
-
-
 // Función para limpiar todos elementos de un array
 function limpiarArrayEntrada(array &$entrada){
-  
+
+    $entrada = htmlspecialchars($_REQUEST['nombre']);
+    $entrada = htmlspecialchars($_REQUEST['login']);
+    $entrada = htmlspecialchars($_REQUEST['clave']);
+    $entrada = htmlspecialchars($_REQUEST['comentario']);
     
 }
 
